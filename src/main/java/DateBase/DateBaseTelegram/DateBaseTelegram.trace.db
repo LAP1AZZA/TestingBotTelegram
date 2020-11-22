@@ -1,0 +1,12 @@
+2020-11-19 20:26:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "USERS" не найдена
+Table "USERS" not found; SQL statement:
+SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ? AND ADMIN_STATUS= ? [42102-199]
+2020-11-20 00:03:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "USERS" не найдена
+Table "USERS" not found; SQL statement:
+SELECT COUNT(*) AS Qty FROM USERS [42102-199]
+2020-11-20 00:03:33 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "USERS" не найдена
+Table "USERS" not found; SQL statement:
+SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ? AND ADMIN_STATUS= ? [42102-199]
