@@ -2,14 +2,15 @@ package entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.sql.ResultSet;
 
 @Entity
-@Table(name = "USERS")
-public class User {
+@Table(name = "USER")
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "LOGIN")
     @Size(min = 5, message = "Не менее 5 знаков")
@@ -24,7 +25,7 @@ public class User {
     private String password;
 
     @Column(name = "ADMIN_STATUS")
-    private boolean admin_status;
+    private boolean adminStatus;
 
     public User() {}
 
@@ -42,7 +43,7 @@ public class User {
         return password;
     }
     public boolean getAdmin_status() {
-        return admin_status;
+        return adminStatus;
     }
     public void setLogin(String login) { this.login = login; }
     public void setName(String name) { this.name = name; }
@@ -50,6 +51,6 @@ public class User {
         this.password = password;
     }
     public void setAdmin_status(boolean admin_status) {
-        this.admin_status = admin_status;
+        this.adminStatus = admin_status;
     }
 }

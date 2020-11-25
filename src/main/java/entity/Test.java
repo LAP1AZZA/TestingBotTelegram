@@ -1,25 +1,31 @@
 package entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "TESTS")
+@Table(name = "TEST")
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "NAME")
-    private String questions_list;
+    @Column(name = "QUESTIONS_LIST")
+    private String questionsList;
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "bir")
+    private Set<Question> questions;
 
     public Test(String name) {
         this.name = name;
     }
     public Test() {}
 
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     public String getName() {
         return name;
     }
@@ -27,10 +33,10 @@ public class Test {
         this.name = name;
     }
     public String getQuestions_list() {
-        return questions_list;
+        return questionsList;
     }
     public void setQuestions_list(String questions_list) {
-        this.questions_list = questions_list;
+        this.questionsList = questions_list;
     }
 
 }
