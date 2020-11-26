@@ -1,17 +1,21 @@
 package InteractionWithTelegram;
 
-import CRUD.UserService;
+import Connection.ConnectionDB;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+import service.UserService;
 import constants.CommandConstants;
 import constants.TestConstants;
 import constants.RegistrationConstants;
 import entity.User;
-import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Repository
+@Component
 public class AuthorizationUser {
+    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
     private static boolean startModOn;
     private static boolean createQuestionModOn;
     private static boolean openQuestionModOn;
@@ -25,12 +29,11 @@ public class AuthorizationUser {
     private static boolean userFlow;
     private static boolean administrationFlow;
     private static int flowStep = 0;
-    private static PassingTheTest userTest = new PassingTheTest();
-    private static EditTestAdmin adminService = new EditTestAdmin();
-    private static UserService userService = new UserService();
     private static User user = new User();
 
     public String processingUserInput(String userInput) {
+        EditTestAdmin adminService = context.getBean("editTestAdmin", EditTestAdmin.class);
+        PassingTheTest userTest = context.getBean("passingTheTest", PassingTheTest.class);
         if (registrationFlow) {
             return registerNewUserProcess(userInput);
         } else if (authorizationFlow) {
@@ -84,6 +87,7 @@ public class AuthorizationUser {
     }
 
     private String registerNewUserProcess(String currentMessage) {
+        UserService userService = context.getBean("userService", UserService.class);
         switch (flowStep) {
             case 0:
                 flowStep++;
@@ -116,7 +120,26 @@ public class AuthorizationUser {
         }
     }
 
+    public ResultSet getUser(User user) { //Костыль - доделать
+        ConnectionDB connectionDB = new ConnectionDB();
+        ResultSet rs = null;
+        String select = "SELECT * FROM USER WHERE " +
+                "LOGIN" + " = ? AND " + "PASSWORD" +
+                " = ? AND " + "ADMIN_STATUS" + "= ?";
+        try {
+            PreparedStatement prSt = connectionDB.getDataBaseConnection().prepareStatement(select);
+            prSt.setString(1, user.getLogin());
+            prSt.setString(2, user.getPassword());
+            prSt.setBoolean(3, user.getAdmin_status());
+            rs = prSt.executeQuery();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return rs;
+    }
+
     private String authorizationUserProcess(String currentMessage){
+        ConnectionDB connectionDB = new ConnectionDB();
         switch (flowStep) {
             case 0:
                 flowStep++;
@@ -128,7 +151,7 @@ public class AuthorizationUser {
             default:
                 user.setPassword(currentMessage);
                 user.setAdmin_status(false);
-                ResultSet rs = (ResultSet) userService.getUser(user.getId());
+                ResultSet rs = getUser(user);
                 boolean occurrence = false;
                 try {
                     while (rs.next()) {
@@ -139,7 +162,7 @@ public class AuthorizationUser {
                 }
                 if (!occurrence) {
                     user.setAdmin_status(true);
-                    rs = (ResultSet) userService.getUser(user.getId());
+                    rs = getUser(user);
                     boolean adminOccurrence = false;
                     try {
                         while (rs.next()) {
@@ -209,9 +232,7 @@ public class AuthorizationUser {
         flowStep = 0;
     }
 
-    public void testingFlowStopper () {
-        testingModOn = false;
-    }
+    public void testingFlowStopper () {testingModOn = false;}
 
     public void modesOff() {
         createQuestionModOn = false;

@@ -1,23 +1,26 @@
 package InteractionWithTelegram;
 
-import CRUD.QuestionService;
-import CRUD.TestService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+import service.QuestionService;
+import service.TestService;
 import constants.TestConstants;
 import entity.Test;
 
 import java.util.ArrayList;
 
-
+@Component
 public class PassingTheTest {
+    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    AuthorizationUser authorizationUser = context.getBean("authorizationUser", AuthorizationUser.class);
+    QuestionService questionService = context.getBean("questionService", QuestionService.class);
+    TestService testService = context.getBean("testService", TestService.class);
     private static int questionNumberInTheTest;
     private static int numberOfCorrectAnswers;
     private static String questionMessage;
     private static int testQuestionIdSize;
     private static ArrayList testQuestionId = new ArrayList();
     private static ArrayList questionAnswerParts = new ArrayList();
-    private static AuthorizationUser input = new AuthorizationUser();
-    private static QuestionService questionService = new QuestionService();
-    private static TestService testService = new TestService();
 
     public String testPerformer(String userMessage) {
         String answer;
@@ -40,7 +43,7 @@ public class PassingTheTest {
             answer = arrSplit[1];
             checkAnswer(userMessage, answer);
             if (testQuestionIdSize == questionNumberInTheTest) {
-                input.testingFlowStopper();
+                authorizationUser.testingFlowStopper();
                 testQuestionId = new ArrayList();
                 questionAnswerParts = new ArrayList();
                 questionNumberInTheTest = 0;

@@ -1,10 +1,6 @@
-import CRUD.QuestionService;
-import CRUD.UserService;
-import entity.Question;
+import service.UserService;
 import entity.User;
 import org.junit.jupiter.api.Test;
-
-import javax.management.Query;
 
 public class QuestionServiceTest {
     UserService service = new UserService();

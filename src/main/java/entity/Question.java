@@ -2,11 +2,13 @@ package entity;
 
 import entity.enumVariables.QuestionDifficulty;
 import entity.enumVariables.QuestionType;
+import org.springframework.stereotype.Component;
 
 
 import javax.persistence.*;
 import java.util.Collection;
 
+@Component
 @Entity
 @Table(name = "QUESTION")
 public class Question {

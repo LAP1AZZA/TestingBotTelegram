@@ -1,8 +1,11 @@
 package entity;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Component
 @Entity
 @Table(name = "TEST")
 public class Test {

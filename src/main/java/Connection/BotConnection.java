@@ -1,8 +1,9 @@
-package InteractionWithTelegram;
+package Connection;
 
 import InteractionWithTelegram.AuthorizationUser;
 import constants.CommandConstants;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -23,6 +24,7 @@ public class BotConnection extends TelegramLongPollingBot{
 
     @Override
     public void onUpdateReceived(Update update){
+        ApiContextInitializer.init();
         AuthorizationUser input = new AuthorizationUser();
         if (update.getMessage() != null && update.getMessage().hasText()){
             outMessage = input.processingUserInput(update.getMessage().getText());

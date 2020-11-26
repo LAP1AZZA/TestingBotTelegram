@@ -1,9 +1,12 @@
 package entity;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.sql.ResultSet;
 
+@Component
 @Entity
 @Table(name = "USER")
 public class User{

@@ -1,26 +1,26 @@
 package InteractionWithTelegram;
 
-import CRUD.QuestionService;
-import CRUD.TestService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+import service.QuestionService;
+import service.TestService;
 import constants.QuestionConstants;
 import constants.RegistrationConstants;
 import constants.TestConstants;
 import entity.Question;
 import entity.Test;
-import org.springframework.stereotype.Repository;
 
-@Repository
+@Component
 public class EditTestAdmin {
+    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    AuthorizationUser authorizationUser = context.getBean("authorizationUser", AuthorizationUser.class);
+    QuestionService questionService = context.getBean("questionService", QuestionService.class);
+    TestService testService = context.getBean("testService", TestService.class);
     private static int progressCounter = 0;
-    private static AuthorizationUser input = new AuthorizationUser();
     private static Test test = new Test();
-    private static TestService testService = new TestService();
-    private static Question question = new Question();
-    private static QuestionService service = new QuestionService();
 
     public String createQuestion(String adminMessage) {
-
-
+        Question question = context.getBean("question", Question.class);
         if (progressCounter == 0) {
             progressCounter++;
             return QuestionConstants.QUESTION_CREATE_AUTHOR_MESSAGE_BOT;
@@ -45,9 +45,9 @@ public class EditTestAdmin {
             question.setAnswer(adminMessage);
             return QuestionConstants.QUESTION_CREATE_FINISH_MESSAGE_BOT;
         } else {
-            Question question1 = service.addQuestion(question);
+            Question question1 = questionService.addQuestion(question);
             progressCounter = 0;
-            input.modesOff();
+            authorizationUser.modesOff();
             return RegistrationConstants.START_MESSAGE_BOT;
         }
     }
@@ -59,8 +59,8 @@ public class EditTestAdmin {
             return QuestionConstants.QUESTION_OPEN_MESSAGE_BOT;
         } else {
             progressCounter = 0;
-            input.modesOff();
-            return String.valueOf(service.getQuestion(Integer.valueOf(adminMessage)));
+            authorizationUser.modesOff();
+            return String.valueOf(questionService.getQuestion(Integer.valueOf(adminMessage)));
         }
     }
 
@@ -69,9 +69,9 @@ public class EditTestAdmin {
             progressCounter++;
             return QuestionConstants.QUESTION_DELETE_MESSAGE_BOT;
         } else {
-            service.deleteQuestion(Integer.valueOf(adminMessage));
+            questionService.deleteQuestion(Integer.valueOf(adminMessage));
             progressCounter = 0;
-            input.modesOff();
+            authorizationUser.modesOff();
             return QuestionConstants.QUESTION_DELETE_СOMPLETED_MESSAGE_BOT;
         }
     }
@@ -89,7 +89,7 @@ public class EditTestAdmin {
             test.setQuestions_list(adminMessage);
             Test test1 = testService.addTest(test);
             progressCounter = 0;
-            input.modesOff();
+            authorizationUser.modesOff();
             return TestConstants.TEST_CREATE_FINISH_MESSAGE_BOT;
         }
     }
@@ -100,7 +100,7 @@ public class EditTestAdmin {
             return TestConstants.TEST_OPEN_NAME_MESSAGE_BOT;
         } else {
             progressCounter = 0;
-            input.modesOff();
+            authorizationUser.modesOff();
             test.setName(adminMessage);
             return TestConstants.REGULAR_EXPRESSION_QUESTION + testService.getTest(test.getId());
         }
@@ -111,7 +111,7 @@ public class EditTestAdmin {
             return TestConstants.TEST_DELETE_MESSAGE_BOT;
         } else {
             progressCounter = 0;
-            input.modesOff();
+            authorizationUser.modesOff();
             test.setName(adminMessage);
             testService.deleteTest(test.getId());
             return TestConstants.TEST_DELETE_COMPLETED_MESSAGE_BOT;

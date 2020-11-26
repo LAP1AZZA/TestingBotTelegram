@@ -1,4 +1,4 @@
-package CRUD;
+package service;
 
 import entity.Question;
 import org.springframework.stereotype.Service;
